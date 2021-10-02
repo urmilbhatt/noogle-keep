@@ -128,8 +128,8 @@ export default function Layout({ children }) {
     }
 
     function logout() {
-      signOut();
       history.push('/');
+      signOut();
     }
 
     return (
@@ -156,7 +156,7 @@ export default function Layout({ children }) {
                 >
                     Noogle Keep
                 </Typography>
-                <Button color="inherit" onClick={() => logout()}>Logout</Button>
+                <Button color="inherit" onClick={logout}>Logout</Button>
             </Toolbar>
         </AppBar>
         <Drawer
