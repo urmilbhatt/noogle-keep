@@ -1,14 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Layout, CreateNote, NotesList } from '../components';
+import { useAuth } from '../contexts/AuthContext';
 import { useNotes } from '../hooks/useNotes';
 
-export default function Home() {
+export default function Home(props) {
     const [editNote, setEditNote] = useState(null);
+    const { currentUser } = useAuth();
     const { notes, getNotes, addNotes, updateNote, deleteNote } = useNotes();
 
     useEffect(() => {
-        getNotes();
-    }, [getNotes]);
+        getNotes(currentUser?.uid);
+    }, [getNotes, currentUser?.uid]);
 
     const filteredNotes = useMemo(() => {
         return notes.filter(note => !note.isDeleted)

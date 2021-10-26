@@ -16,7 +16,13 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
 const firestore = app.firestore();
 const database = {
-    notes: firestore.collection('notes'),
+    notes: (uid) => {
+        return firestore.collection('users').doc(uid).collection('notes')
+    },
+    doesUserExists: async (userId) => {
+        const doc = await firestore.collection('users').doc(userId).get();
+        return doc.exists;
+    },
     trash: firestore.collection('trash'),
     formatDoc: doc => {
         return { id: doc.id, ...doc.data() }
@@ -26,6 +32,7 @@ const database = {
 export {
     auth,
     firebase,
+    firestore,
     database
 }
 export default app;

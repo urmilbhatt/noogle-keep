@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from 'react';
-import { database } from '../config/firebase';
+import { database, firestore } from '../config/firebase';
 
 const ACTIONS = {
     GET_NOTES: 'GET_NOTES',
@@ -59,31 +59,37 @@ const initialState = {
 export function useNotes() {
     const [{ notes }, dispatch] = useReducer(reducer, initialState);
 
-    const getNotes = useCallback(() => {
+    const getNotes = useCallback((userId) => {
         let data = [];
 
-        database.notes.get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => data.push(database.formatDoc(doc)))
+        database.doesUserExists(userId).then(() => {
+            database.notes(userId).get().then(querySnapshot => {
+                querySnapshot.forEach(doc => data.push(database.formatDoc(doc)));
                 dispatch({ type: ACTIONS.GET_NOTES, payload: data });
             });
+        }).catch((e) => {
+            dispatch({ type: ACTIONS.GET_NOTES, payload: data });
+            console.error(e);
+        });
     }, [dispatch]);
 
     const addNotes = useCallback((note) => {
-        // dispatch({ type: ACTIONS.ADD_NOTES, payload: note });
-        return database.notes.add(note).then(() => {
+        const userRef = firestore.collection('users').doc(note.userId);
+        const notesCollectionRef = userRef.collection('notes').doc(note.id).set(note);
+        
+        notesCollectionRef.then(() => {
             dispatch({ type: ACTIONS.ADD_NOTES, payload: note });
         });
     }, [dispatch]);
 
     const updateNote = useCallback((note) => {
-        return database.notes.doc(note.id).update(note).then(() => {
+        return database.notes(note.userId).doc(note.id).update(note).then(() => {
             dispatch({ type: ACTIONS.UPDATE_NOTES, payload: note })
         });
     }, [dispatch]);
 
     const deleteNote = useCallback((note) => {
-        return database.notes.doc(note.id).delete().then(() => {
+        return database.notes(note.userId).doc(note.id).delete().then(() => {
             dispatch({ type: ACTIONS.DELETE_NOTES, payload: note })
         });
     }, [dispatch]);

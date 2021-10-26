@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import { useEffect, useMemo } from 'react';
 
 import { Layout, NotesList, TrashIcon } from '../components';
+import { useAuth } from '../contexts/AuthContext';
 import { useNotes } from '../hooks/useNotes';
 
 const useStyles = makeStyles({
@@ -18,14 +19,15 @@ const useStyles = makeStyles({
 })
 
 export default function Trash() {
+    const { currentUser } = useAuth();
     const { notes, getNotes, updateNote, deleteNote } = useNotes();
     const classes = useStyles();
 
     useEffect(() => {
         if (!notes.length) {
-            getNotes();
+            getNotes(currentUser?.uid);
         }
-    }, [notes, getNotes]);
+    }, [notes, getNotes, currentUser.uid]);
 
     const filteredNotes = useMemo(() => {
         return notes.filter(note => note.isDeleted);
