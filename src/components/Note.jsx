@@ -32,10 +32,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function Note({ note, updateNote, deleteNote, setEditNote, isSelected }) {
-    
+function Note({ note, updateNote, deleteNote, setEditNote }) {
     const [showActions, setShowActions] = useState(false);
-    const classes = useStyles({ isSelected, showActions });
+    const classes = useStyles({ showActions });
 
     const generateSnackbarMessage = useSnackbar();
 
@@ -57,7 +56,7 @@ function Note({ note, updateNote, deleteNote, setEditNote, isSelected }) {
             onMouseEnter={() => setShowActions(true)}
             onMouseLeave={() => setShowActions(false)}
             className={classes.card}
-            style={{ backgroundColor: color, border: isSelected ? '' : '', overflow: 'inherit' }}
+            style={{ backgroundColor: color, overflow: 'inherit' }}
         >
             <CardContent className={classes.cardContent}>
                 <Typography>

@@ -15,7 +15,6 @@ export default function NotesList({
     notes,
     updateNote,
     deleteNote,
-    editNote,
     setEditNote
 }) {
     const classes = useStyles();
@@ -25,14 +24,13 @@ export default function NotesList({
                 <Note
                     key={note.id}
                     note={note}
-                    isSelected={Boolean(editNote) && note.id === editNote.id}
                     updateNote={updateNote}
                     deleteNote={deleteNote}
                     setEditNote={setEditNote}
                 />
             );
         })
-    }, [notes, updateNote, deleteNote, setEditNote, editNote]);
+    }, [notes, updateNote, deleteNote, setEditNote]);
 
     return (
         <Container className={classes.container}>

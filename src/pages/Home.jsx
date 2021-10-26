@@ -28,7 +28,6 @@ export default function Home(props) {
                 notes={filteredNotes}
                 updateNote={updateNote}
                 deleteNote={deleteNote}
-                editNote={editNote}
                 setEditNote={setEditNote}
             />
         </Layout>

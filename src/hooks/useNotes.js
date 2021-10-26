@@ -75,10 +75,10 @@ export function useNotes() {
 
     const addNotes = useCallback((note) => {
         const userRef = firestore.collection('users').doc(note.userId);
-        const notesCollectionRef = userRef.collection('notes').doc(note.id).set(note);
+        const notesCollectionRef = userRef.collection('notes').add(note);
         
-        notesCollectionRef.then(() => {
-            dispatch({ type: ACTIONS.ADD_NOTES, payload: note });
+        notesCollectionRef.then((doc) => {
+            dispatch({ type: ACTIONS.ADD_NOTES, payload: { id: doc.id, ...note } });
         });
     }, [dispatch]);
 
